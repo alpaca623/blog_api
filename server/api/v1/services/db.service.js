@@ -5,7 +5,7 @@ import config from "../../../common/config";
 
 class DatabaseConnection {
   constructor() {
-    this.pool = mariadb.createPool(config.db).getConnection();
+    this.pool = mariadb.createPool(config.db);
     this.connection = mariadb.createConnection(config.db);
   }
 
@@ -15,15 +15,29 @@ class DatabaseConnection {
 
   query(query, params) {
     return new Promise((resolve, reject) => {
-      this.connection.then(conn => {
-        conn.query(query).then((err, result) => {
-          if (err) {
-            l.error(err);
-            reject(err);
-          }
-          resolve(result);
-        });
-      });
+      /***********************
+       * parameter 작업 해야됨
+       ***********************/
+
+      /***********************
+       * connection 이용시
+       ***********************/
+      // this.connection.then(conn => {
+      //   conn.query(query).then(rows => {
+      //     resolve(rows);
+      //   }).catch(err => {
+      //     l.error(`[DB_QUERY_ERROR!] >> ${err}`);
+      //     reject(err);
+      //   });
+      // });
+
+      /***********************
+       * pool 이용시
+       ***********************/
+      this.pool
+        .query(query)
+        .then(rows => resolve(rows))
+        .catch(err => reject(err));
     });
   }
 
