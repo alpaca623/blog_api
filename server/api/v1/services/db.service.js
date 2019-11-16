@@ -35,7 +35,7 @@ class DatabaseConnection {
        * pool 이용시
        ***********************/
       this.pool
-        .query(query)
+        .query(query, params)
         .then(rows => resolve(rows))
         .catch(err => reject(err));
     });
