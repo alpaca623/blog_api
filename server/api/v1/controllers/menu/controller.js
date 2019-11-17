@@ -6,9 +6,9 @@ class Controller {
   insertMenu(req, res) {
     l.debug("[menuController] [insertMenu] enter");
     try {
-      
+      const data = req.body;
       menuService
-        .insertMenu()
+        .insertMenu(data)
         .then(r => {
           l.debug("[menuController] [insertMenu] result >>", r);
           res.status(200).json({ status: true, data: r });
