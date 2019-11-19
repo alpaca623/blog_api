@@ -7,6 +7,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
 import config from "./config";
+import session from "express-session";
+import fs from "fs";
+import ejs from "ejs";
 
 import l from "./logger";
 import errorHandler from "../api/v1/middlewares/error.handler";
@@ -16,6 +19,12 @@ const app = new Express();
 export default class ExpressServer {
   constructor() {
     const root = path.normalize(`${__dirname}/../..`);
+    app.set("views", __dirname + "/views");
+    app.set("view engine", "ejs");
+    app.engine("html", ejs.renderFile);
+
+    app.use(Express.static('public'));
+    
     app.use(bodyParser.json({ limit: process.env.REQUEST_LIMIT || "100kb" }));
     app.use(
       bodyParser.urlencoded({
@@ -23,7 +32,14 @@ export default class ExpressServer {
         limit: process.env.REQUEST_LIMIT || "100kb"
       })
     );
-    app.use(cookieParser());
+    app.use(
+      session({
+        secret: "#kka@ckkdl2))",
+        resave: false,
+        saveUninitialized: true
+      })
+    );
+    // app.use(cookieParser());
     app.use(cors());
     app.use(morgan("dev"));
   }
