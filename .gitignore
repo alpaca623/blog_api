@@ -1,3 +1,4 @@
 node_modules
+dist
 
 server/common/config.js
